@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = '/api/v1';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 // Task Status
 export const TASK_STATUS = {
