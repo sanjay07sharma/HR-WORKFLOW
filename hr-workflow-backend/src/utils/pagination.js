@@ -1,0 +1,31 @@
+/**
+ * Pagination utility for MongoDB queries
+ */
+const paginate = (query) => {
+  const page = Math.max(1, parseInt(query.page) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(query.limit) || 20));
+  const skip = (page - 1) * limit;
+
+  return { page, limit, skip };
+};
+
+/**
+ * Build pagination response metadata
+ */
+const paginationMeta = (total, { page, limit }) => {
+  const totalPages = Math.ceil(total / limit);
+  
+  return {
+    page,
+    limit,
+    total,
+    totalPages,
+    hasMore: page < totalPages,
+    hasPrev: page > 1
+  };
+};
+
+module.exports = {
+  paginate,
+  paginationMeta
+};
