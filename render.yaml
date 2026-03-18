@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: hr-workflow-api
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: hr-workflow-backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
