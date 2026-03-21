@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd hr-workflow-frontend && npm install && npm run build",
+  "outputDirectory": "hr-workflow-frontend/dist",
+  "framework": "vite"
+}
