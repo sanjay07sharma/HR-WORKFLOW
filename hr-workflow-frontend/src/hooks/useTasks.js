@@ -60,12 +60,9 @@ export const useTasks = (initialFilters = {}) => {
 
   // Update task status
   const updateTaskStatus = useCallback(async (id, status) => {
-    const response = await taskApi.updateTaskStatus(id, status);
-    setTasks((prev) =>
-      prev.map((task) => (task._id === id ? response.data : task))
-    );
-    return response;
-  }, []);
+    await taskApi.updateTaskStatus(id, status);
+    await fetchTasks();
+  }, [fetchTasks]);
 
   // Delete task
   const deleteTask = useCallback(async (id) => {
