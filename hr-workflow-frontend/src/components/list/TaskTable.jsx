@@ -3,13 +3,41 @@ import StatusBadge from '../tasks/StatusBadge';
 import PriorityBadge from '../tasks/PriorityBadge';
 import { formatDate, isOverdue, cn } from '../../utils';
 
-const TaskTable = ({ tasks, onView, onEdit, onDelete, onStatusChange }) => {
+const TaskTable = ({ tasks, onView, onEdit, onDelete, onStatusChange, selectedIds = [], onSelectChange }) => {
+  const allSelected = tasks.length > 0 && tasks.every(t => selectedIds.includes(t._id));
+  const someSelected = tasks.some(t => selectedIds.includes(t._id)) && !allSelected;
+
+  const handleSelectAll = () => {
+    if (allSelected) {
+      onSelectChange([]);
+    } else {
+      onSelectChange(tasks.map(t => t._id));
+    }
+  };
+
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      onSelectChange(selectedIds.filter(sid => sid !== id));
+    } else {
+      onSelectChange([...selectedIds, id]);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
+              <th className="px-4 py-3 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  ref={el => { if (el) el.indeterminate = someSelected; }}
+                  onChange={handleSelectAll}
+                  className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
+                />
+              </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Task
               </th>
@@ -45,6 +73,16 @@ const TaskTable = ({ tasks, onView, onEdit, onDelete, onStatusChange }) => {
                     taskIsOverdue && 'bg-red-50/50'
                   )}
                 >
+                  {/* Checkbox */}
+                  <td className="px-4 py-3 w-10">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(task._id)}
+                      onChange={() => handleSelectOne(task._id)}
+                      className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
+                    />
+                  </td>
+
                   {/* Task Title */}
                   <td className="px-4 py-3">
                     <div className="max-w-xs">

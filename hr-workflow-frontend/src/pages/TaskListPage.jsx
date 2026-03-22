@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, RefreshCw } from 'lucide-react';
+import { Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { Button, Modal, Loader, EmptyState, ErrorMessage } from '../components/common';
 import { FilterBar, TaskForm } from '../components/tasks';
 import { TaskTable, Pagination } from '../components/list';
@@ -30,8 +30,9 @@ const TaskListPage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-      const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
-      const [isDeleteAllSubmitting, setIsDeleteAllSubmitting] = useState(false);
+  const [selectedTaskIds, setSelectedTaskIds] = useState([]);
+  const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
   // Handle view task
   const handleViewTask = (task) => {
     setSelectedTask(task);
@@ -64,17 +65,18 @@ const TaskListPage = () => {
   };
 
 
-      // Handle delete all tasks
-  const handleDeleteAllTasks = async () => {
+      // Handle bulk delete selected tasks
+  const handleBulkDelete = async () => {
     try {
-      setIsDeleteAllSubmitting(true);
-      await taskApi.deleteAllTasks();
+      setIsBulkDeleting(true);
+      await taskApi.bulkDeleteTasks(selectedTaskIds);
+      setSelectedTaskIds([]);
       fetchTasks();
-      setIsDeleteAllModalOpen(false);
+      setIsBulkDeleteModalOpen(false);
     } catch (err) {
       alert(err.message);
     } finally {
-      setIsDeleteAllSubmitting(false);
+      setIsBulkDeleting(false);
     }
   };
   // Handle edit task submit
@@ -137,14 +139,17 @@ const TaskListPage = () => {
             <Plus className="w-4 h-4 mr-2" />
             New Task
           </Button>
-        </div>
+          {selectedTaskIds.length > 0 && (
               <Button
                 variant="danger"
-                onClick={() => setIsDeleteAllModalOpen(true)}
+                onClick={() => setIsBulkDeleteModalOpen(true)}
                 className="ml-2"
               >
-                Delete All
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete Selected ({selectedTaskIds.length})
               </Button>
+          )}
+        </div>
       </div>
 
       {/* Filters */}
@@ -180,6 +185,8 @@ const TaskListPage = () => {
             onEdit={handleEditTask}
             onDelete={handleDeleteClick}
             onStatusChange={handleStatusChange}
+            selectedIds={selectedTaskIds}
+            onSelectChange={setSelectedTaskIds}
           />
           <Pagination pagination={pagination} onPageChange={handlePageChange} />
         </>
@@ -308,6 +315,37 @@ const TaskListPage = () => {
               loading={isSubmitting}
             >
               Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Bulk Delete Confirmation Modal */}
+      <Modal
+        isOpen={isBulkDeleteModalOpen}
+        onClose={() => setIsBulkDeleteModalOpen(false)}
+        title="Delete Selected Tasks"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600">
+            Are you sure you want to delete{' '}
+            <span className="font-medium text-gray-900">{selectedTaskIds.length} task(s)</span>?
+            This action cannot be undone.
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="secondary"
+              onClick={() => setIsBulkDeleteModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleBulkDelete}
+              loading={isBulkDeleting}
+            >
+              Delete {selectedTaskIds.length} Task(s)
             </Button>
           </div>
         </div>

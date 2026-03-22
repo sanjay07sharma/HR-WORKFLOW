@@ -60,10 +60,10 @@ export const taskApi = {
   },
 
   /**
-   * Delete all tasks (bulk delete)
+   * Bulk delete tasks by IDs
    */
-  deleteAllTasks: async () => {
-    return axiosInstance.delete('/tasks/all');
+  bulkDeleteTasks: async (ids) => {
+    return axiosInstance.delete('/tasks/bulk', { data: { ids } });
   },
   };
 

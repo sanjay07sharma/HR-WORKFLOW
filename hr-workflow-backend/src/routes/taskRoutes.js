@@ -24,8 +24,8 @@ router.post('/', createTaskRules, validateRequest, taskController.createTask);
 // PATCH /tasks/reorder - Reorder task (Kanban)
 router.patch('/reorder', taskController.reorderTask);
 
-// DELETE /tasks/all - Delete all tasks (must be before :id routes)
-router.delete('/all', taskController.deleteAllTasks);
+// DELETE /tasks/bulk - Bulk delete tasks by IDs (must be before :id routes)
+router.delete('/bulk', taskController.bulkDeleteTasks);
 
 // GET /tasks/:id - Get single task
 router.get('/:id', taskIdRules, validateRequest, taskController.getTaskById);

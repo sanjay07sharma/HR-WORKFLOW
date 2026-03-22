@@ -109,12 +109,13 @@ module.exports = {
   getTaskActivity
   ,
   /**
-   * @desc    Delete all tasks
-   * @route   DELETE /api/v1/tasks/all
+   * @desc    Bulk delete tasks by IDs
+   * @route   DELETE /api/v1/tasks/bulk
    * @access  Public
    */
-  deleteAllTasks: asyncHandler(async (req, res) => {
-    const result = await taskService.deleteAllTasks();
+  bulkDeleteTasks: asyncHandler(async (req, res) => {
+    const { ids } = req.body;
+    const result = await taskService.bulkDeleteTasks(ids);
     ApiResponse.success(result, result.message).send(res);
   })
 };

@@ -270,12 +270,15 @@ class TaskService {
     });
   }
     /**
-     * Delete all tasks (bulk delete)
+     * Bulk delete tasks by IDs
      */
-    async deleteAllTasks() {
-      const result = await Task.deleteMany({});
-      await ActivityLog.deleteMany({});
-      return { success: true, message: `Deleted ${result.deletedCount} tasks.` };
+    async bulkDeleteTasks(ids) {
+      if (!Array.isArray(ids) || ids.length === 0) {
+        throw new ApiError(400, 'Please provide an array of task IDs to delete');
+      }
+      const result = await Task.deleteMany({ _id: { $in: ids } });
+      await ActivityLog.deleteMany({ task: { $in: ids } });
+      return { success: true, message: `Deleted ${result.deletedCount} task(s).`, deletedCount: result.deletedCount };
     }
 }
 
