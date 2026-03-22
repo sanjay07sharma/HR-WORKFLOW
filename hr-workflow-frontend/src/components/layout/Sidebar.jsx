@@ -14,7 +14,7 @@ const Sidebar = () => {
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-gray-200">
         <div className="flex items-center gap-2">
-          <img src="/zoro.png" alt="HR Workflow" className="w-8 h-8 object-contain" />
+          <img src="/zoro.jpg" alt="HR Workflow" className="w-8 h-8 object-contain" />
           <span className="font-semibold text-gray-900">HR Workflow</span>
         </div>
       </div>
