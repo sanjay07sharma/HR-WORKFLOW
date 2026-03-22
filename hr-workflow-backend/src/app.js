@@ -22,7 +22,8 @@ const createApp = () => {
     app.use(morgan('combined'));
   }
 
-  // CORS
+  // CORS - handle preflight for all routes first
+  app.options('*', cors(corsOptions));
   app.use(cors(corsOptions));
 
   // Body parsing

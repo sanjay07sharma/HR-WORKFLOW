@@ -1,31 +1,26 @@
 const { corsOrigins, nodeEnv } = require('./env');
 
+const allowedOrigins = (origin) => {
+  if (!origin) return true;
+  if (nodeEnv === 'development' && (origin.includes('localhost') || origin.includes('127.0.0.1'))) return true;
+  if (origin.endsWith('.vercel.app')) return true;
+  if (corsOrigins.includes(origin)) return true;
+  return false;
+};
+
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // In development, allow all localhost origins
-    if (nodeEnv === 'development') {
-      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
-        return callback(null, true);
-      }
-    }
-    
-    // Allow all vercel.app subdomains (preview + production)
-    if (origin.endsWith('.vercel.app')) {
-      return callback(null, true);
-    }
-
-    if (corsOrigins.includes(origin)) {
+    if (allowedOrigins(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, false);
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
 module.exports = corsOptions;
