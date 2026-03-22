@@ -1,5 +1,22 @@
 const createApp = require('./app');
 const { connectDatabase, env } = require('./config');
+const { Category } = require('./models');
+const { DEFAULT_CATEGORIES } = require('./constants');
+
+/**
+ * Auto-seed default categories if none exist
+ */
+const autoSeedCategories = async () => {
+  try {
+    const count = await Category.countDocuments();
+    if (count === 0) {
+      await Category.insertMany(DEFAULT_CATEGORIES);
+      console.log(`✅ Auto-seeded ${DEFAULT_CATEGORIES.length} default categories`);
+    }
+  } catch (err) {
+    console.error('⚠️ Auto-seed failed (non-fatal):', err.message);
+  }
+};
 
 /**
  * Start the server
@@ -8,6 +25,9 @@ const startServer = async () => {
   try {
     // Connect to MongoDB
     await connectDatabase();
+
+    // Auto-seed categories on first run
+    await autoSeedCategories();
 
     // Create Express app
     const app = createApp();
