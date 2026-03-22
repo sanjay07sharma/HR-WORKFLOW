@@ -12,6 +12,11 @@ const corsOptions = {
       }
     }
     
+    // Allow all vercel.app subdomains (preview + production)
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+
     if (corsOrigins.includes(origin)) {
       callback(null, true);
     } else {
