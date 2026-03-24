@@ -65,12 +65,12 @@ const DEFAULT_CATEGORIES = [
     color: '#84CC16',
     icon: 'briefcase',
     displayOrder: 8
-  }
+  },
   {
     name: 'HR Letters',
-    slug: 'Letters',
+    slug: 'hr_letters',
     description: 'HR letters and documentation',
-    color: '#84CC16',
+    color: '#6366F1',
     icon: 'file-text',
     displayOrder: 9
   }

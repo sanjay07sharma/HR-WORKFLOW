@@ -210,7 +210,7 @@ const generateSampleTasks = (categories) => {
       title: 'Schedule interviews - Senior Developer role',
       description: 'Coordinate panel interviews for 6 shortlisted candidates',
       status: 'in_progress',
-      category: categoryMap['recruitment'],
+      category: categoryMap['Letters'],
       priority: 'high',
       assignee: 'Jennifer Lee',
       dueDate: daysFromNow(3),
