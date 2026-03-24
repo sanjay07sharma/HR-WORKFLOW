@@ -66,6 +66,14 @@ const DEFAULT_CATEGORIES = [
     icon: 'briefcase',
     displayOrder: 8
   }
+  {
+    name: 'HR Letters',
+    slug: 'Letters',
+    description: 'HR letters and documentation',
+    color: '#84CC16',
+    icon: 'file-text',
+    displayOrder: 9
+  }
 ];
 
 module.exports = {
